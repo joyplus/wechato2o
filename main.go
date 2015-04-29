@@ -48,9 +48,15 @@ func (e *Echo) EventUnsubscribe(appoid string, oid string, back chan interface{}
 }
 func (e *Echo) EventMenu(appoid string, oid string, key string, back chan interface{}) {
 	wechat.Info("Echo: EventMenu ", oid, key)
+	e.Api.SendTextMessage(entry.BuildTextMessage(oid, "正在寻找符合条件的菜老板"))
 }
 
 func main() {
+	startWechat()
+}
+
+func startWechat() {
+	wechat.Info("wechat start")
 	wechat.SetLogger("console", "")
 	app := wechat.NewWeChatApp()
 	app.SetConfig("ini", "demo.ini")
@@ -58,8 +64,9 @@ func main() {
 
 	//! 添加菜单
 	menu := entry.NewMenu()
-	btn1 := entry.NewViewButton("新浪", "http://sina.com")
-	btn2 := entry.NewClickButton("点击", "EVENT_MENU_CLICK")
+
+	btn1 := entry.NewClickButton("我要订菜", "EVENT_MENU_CLICK")
+	btn2 := entry.NewViewButton("我的订单", "http://sina.com")
 	btn3 := entry.NewButton("更多")
 	btn3.Append(entry.NewViewButton("腾讯", "http://qq.com"))
 	btn3.Append(entry.NewViewButton("百度", "http://baidu.com"))
